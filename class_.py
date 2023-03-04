@@ -22,13 +22,26 @@ class YouTubechennel:
         channel = self.youtube.channels().list(id=self.__ch_id, part='snippet,statistics').execute()
         print(json.dumps(channel, indent=2, ensure_ascii=False))
 
+    def __str__(self):
+        """Возвращает информацию о канале (название канала)"""
+        return f"Youtube-канал: {self.title}"
+
+    def __add__(self, other):
+        """Суммирует количество подписчиков"""
+        return self.subs_count + other.subs_count
+
+    def __gt__(self, other):
+        """Сравнивает количество подписчиков"""
+        if isinstance(other, YouTubechennel):
+            return int(self.subs_count) > int(other.subs_count)
+
     @property
-    def channel_id(self) -> str:
+    def channel_id(self):
         """Получение id канала"""
         return self.__ch_id
 
     @staticmethod
-    def get_service() -> object:
+    def get_service():
         """Возвращает объект для работы с API ютуба"""
         load_dotenv()
         api_key: str = os.getenv('API_KEY')  # получение ключа из файла .env
