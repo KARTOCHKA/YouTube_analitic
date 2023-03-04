@@ -57,3 +57,32 @@ class YouTubechennel:
                 'view_count': self.view_count
             }
             return json.dump(data, file, indent=2, ensure_ascii=False)
+
+
+class Video:
+
+    def __init__(self, video_id):
+        """Инициализация атрибутов класса"""
+        self.video_id = video_id
+        self.youtube = YouTubechennel.get_service()
+        self.video = self.youtube.videos().list(id=self.video_id, part='snippet,statistics').execute()
+        self.video_title = self.video['items'][0]['snippet']['title']  # название видео
+        self.view_count = self.video['items'][0]['statistics']['viewCount']  # количество просмотров
+        self.like_count = self.video['items'][0]['statistics']['likeCount']  # количество лайков
+
+    def __str__(self) -> str:
+        """Возвращает информацию о видео (название видео)"""
+        return self.video_title
+
+
+class PLVideo(Video):
+    def __init__(self, video_id, playlist_id):
+        super().__init__(video_id)
+        self.playlist_id = playlist_id
+
+        self.playlists = self.youtube.playlists().list(id=self.playlist_id, part='snippet').execute()
+        self.playlist_title = self.playlists['items'][0]['snippet']['title']  # название видео
+
+    def __str__(self) -> str:
+        """Возвращает информацию о видео по шаблону: 'название_видео (название_плейлиста)'"""
+        return f"{self.video_title} ({self.playlist_title})"
