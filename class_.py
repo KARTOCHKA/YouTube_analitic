@@ -28,7 +28,7 @@ class YouTubechennel:
 
     def __add__(self, other):
         """Суммирует количество подписчиков"""
-        return self.subs_count + other.subs_count
+        return int(self.subs_count) + int(other.subs_count)
 
     def __gt__(self, other):
         """Сравнивает количество подписчиков"""
